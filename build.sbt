@@ -17,6 +17,7 @@ val libs = Seq(
   "org.http4s"      %% "http4s-dsl"          % Http4sVersion,
   "io.circe"        %% "circe-generic"       % CirceVersion,
   "ch.qos.logback"  %  "logback-classic"     % LogbackVersion,
+  "com.typesafe" % "config" % "1.4.0",
   scalaTest % Test
 )
 
@@ -34,7 +35,9 @@ lazy val root = (project in file("."))
     name := "search-scrapbox",
     libraryDependencies ++= libs,
     addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.10.3"),
-    addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.0")
+    addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.0"),
+    fork in run := true
   )
+
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
