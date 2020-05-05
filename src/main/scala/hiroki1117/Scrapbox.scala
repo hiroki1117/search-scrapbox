@@ -28,6 +28,9 @@ object Scrapbox {
 
   final case class ProjectPages(projectName: String, pages: Seq[PageInfo])
   final case class PageInfo(id: String, title: String)
+  final case class Page(title: String, lines: Seq[Text])
+  final case class Text(text: String)
+
   object PageInfo {
     implicit val PagesDecoder: Decoder[PageInfo] = deriveDecoder[PageInfo]
     implicit def PagesEntityDecoder[F[_]: Sync]: EntityDecoder[F, PageInfo] = jsonOf[F, PageInfo]
@@ -44,8 +47,6 @@ object Scrapbox {
     implicit def scrapboxPagesEntityEncoder[F[_], Applicative]: EntityEncoder[F, ProjectPages] = jsonEncoderOf
   }
 
-  final case class Page(lines: Seq[Text])
-
   object Page {
     implicit val ScrapboxContentDecoder: Decoder[Page] = deriveDecoder[Page]
     implicit def ScrapboxContentEntityDecoder[F[_]: Sync]: EntityDecoder[F, Page] = jsonOf[F, Page]
@@ -54,7 +55,6 @@ object Scrapbox {
     implicit def ScrapboxContentEntityEncoder[F[_], Applicative]: EntityEncoder[F, Page] = jsonEncoderOf
   }
 
-  final case class Text(text: String)
   object Text {
     implicit val ScrapboxContentDecoder: Decoder[Text] = deriveDecoder[Text]
     implicit def ScrapboxContentEntityDecoder[F[_]: Sync]: EntityDecoder[F, Text] = jsonOf[F, Text]

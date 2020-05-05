@@ -17,6 +17,7 @@ object Server {
     for {
       client <- BlazeClientBuilder[F](global).withIdleTimeout(3.minutes).stream
       scrapboxImpl = Scrapbox.impl[F](client, ConfigFactory.load())
+      repositoryImpl = Repository.inMemoryImpl[F]
 
       // Combine Service Routes into an HttpApp.
       // Can also be done via a Router if you
@@ -24,7 +25,7 @@ object Server {
       // in the underlying routes.
       httpApp = (
           Ping.ping[F] <+>
-          ScrapboxRoutes.scrapboxRoutes(scrapboxImpl)
+          ScrapboxRoutes.scrapboxRoutes(scrapboxImpl, repositoryImpl)
         ).orNotFound
 
       // With Middlewares in place
