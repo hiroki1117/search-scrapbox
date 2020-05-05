@@ -8,13 +8,14 @@ import org.http4s.implicits._
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.middleware.Logger
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.global
 
 object Server {
 
   def stream[F[_]: ConcurrentEffect](implicit T: Timer[F], C: ContextShift[F]): Stream[F, Nothing] = {
     for {
-      client <- BlazeClientBuilder[F](global).stream
+      client <- BlazeClientBuilder[F](global).withIdleTimeout(3.minutes).stream
       scrapboxImpl = Scrapbox.impl[F](client, ConfigFactory.load())
 
       // Combine Service Routes into an HttpApp.
@@ -32,6 +33,7 @@ object Server {
       exitCode <- BlazeServerBuilder[F]
         .bindHttp(8080, "0.0.0.0")
         .withHttpApp(finalHttpApp)
+        .withIdleTimeout(3.minutes)
         .serve
     } yield exitCode
     }.drain

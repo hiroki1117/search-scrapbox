@@ -12,9 +12,12 @@ object ScrapboxRoutes {
     HttpRoutes.of[F] {
       case GET -> Root / "scrapbox" =>
         for {
-          pages <- S.getProgectPages("sample")
-          content <- S.getPageContent("sample", "hoge")
-          resp <- Ok(content)
+          pagesInfo <- S.getProgectPages("diary-hiroki")
+          pages <- S.getAllProjectPagesContent(pagesInfo)
+          resp <- Ok(
+            pages.map(p => p.lines.map(_.text).mkString("¥n")).mkString("¥n¥n")
+          )
+//          resp <- Ok(pages)
         } yield resp
     }
   }
